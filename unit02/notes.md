@@ -1,6 +1,15 @@
 
 ## Q-Learning
 
+**Epsilon Greedy Strategy:** A policy that alternates between exploration (random action) and exploitation.
+
+**The value of a state, or a state-action pair is the expected cumulative reward our agent gets if it starts at this state (or state-action pair) and then acts accordingly to its policy.**
+
+**The reward is the feedback I get from the environment after performing an action at a state.**
+
+
+**Off-policy: using a different policy for acting (inference) and updating (training).**
+
 
 Finding an optimal *value function (Q* or V*)* leads to having an optimal policy.
 
@@ -25,3 +34,12 @@ If we calculate V(St) (value of a state), we need to calculate the return start 
 Monte Carlo is a strategy on how to train our value function or our policy function. It uses experience to solve the RL problem.
 
 Montecarlo uses an entire episode of experience before learning.
+
+
+### Monte Carlo and RD
+
+To summarize the policy learning methods:
+
+-  With Monte Carlo, we update the value function from a complete episode (e.g. cat eats the mouse or if the mouse moves > 10 steps), and so we use the actual accurate discounted return of this episode.
+
+- With TD Learning, we update the value function from a step, so we replace Gt that we don't have with an estimated return called TD target.
