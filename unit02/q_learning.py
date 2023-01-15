@@ -30,6 +30,8 @@ decay_rate = 0.0005            # Exponential decay rate for exploration prob
 
 env = gym.make('FrozenLake-v1', desc=None, map_name="4x4", is_slippery=False)
 
+
+# Let's create our Qtable of size (state_space, action_space) and initialized each values at 0 using np.zeros
 def initialize_q_table(state_space, action_space):
   Qtable = np.zeros((state_space, action_space))
   return Qtable
@@ -54,6 +56,19 @@ def epsilon_greedy_policy(Qtable, state, epsilon):
   
   return action
 
+def epsilon_greedy_policy(Qtable, state, epsilon):
+  # Randomly generate a number between 0 and 1
+  random_int = random.uniform(0,1)
+  # if random_int > greater than epsilon --> exploitation
+  if random_int > epsilon:
+    # Take the action with the highest value given a state
+    # np.argmax can be useful here
+    action = greedy_policy(Qtable, state)
+  # else --> exploration
+  else:
+    action = env.action_space.sample()
+  
+  return action
 
 def train(n_training_episodes, min_epsilon, max_epsilon, decay_rate, env, max_steps, Qtable):
   for episode in tqdm(range(n_training_episodes)):
@@ -74,7 +89,7 @@ def train(n_training_episodes, min_epsilon, max_epsilon, decay_rate, env, max_st
       new_state, reward, done, info = env.step(action)
 
       # Update Q(s,a):= Q(s,a) + lr [R(s,a) + gamma * max Q(s',a') - Q(s,a)]
-      Qtable[state][action] = Qtable[state][action] + learning_rate * (reward + gamma * np.max(Qtable[new_state]) - Qtable[state][action])
+      Qtable[state][action] = Qtable[state][action] + learning_rate * (reward + gamma * np.max(Qtable[new_state]) - Qtable[state][action])   
 
       # If done, finish the episode
       if done:
@@ -83,8 +98,6 @@ def train(n_training_episodes, min_epsilon, max_epsilon, decay_rate, env, max_st
       # Our next state is the new state
       state = new_state
   return Qtable
-
-
 
 def evaluate_agent(env, max_steps, n_eval_episodes, Q, seed):
   """
